@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from "react";
 
-interface friend {
+interface ITodo {
+  userId: number;
   id: number;
-  name: string;
-  username: string;
-  email: string;
-  address: address;
-}
-interface address {
-  street: string;
-  suite: string;
-  city: string;
-  zipcode: string;
+  title: string;
+  completed: boolean;
 }
 
 const Friends: React.FC = () => {
-  const [people, setPeople] = useState<friend[]>([]);
+  const [todoList, setTodoList] = useState<ITodo[]>([]);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+
+  const toggle = (): void => {
+    setIsVisible(!isVisible);
+  };
+
+  const CheckComplete = (props: boolean, id: number): void => {
+    setTodoList(
+      todoList.map((item) => {
+        if (item.id === id) {
+          item = { ...item, completed: !props };
+        }
+        return item;
+      })
+    );
+  };
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users", {
+    fetch("https://jsonplaceholder.typicode.com/todos", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -28,55 +37,31 @@ const Friends: React.FC = () => {
         return response.json();
       })
       .then(function (data) {
-        setPeople(data);
+        setTodoList(data);
       });
   }, []);
 
-  //const [isActive, setIsActive] = useState(true);
-
-  /* const remove = (id: number) => {
-    const updatedState = people.filter((item) => {
-      return item.id !== id;
-    });
-    setPeople(updatedState);
-  };
-
-  const add = () => {
-    const newPerson = { id: 4, name: "ee", age: 21, job: "Project Manager" };
-    const setNewPeople = [...people, newPerson];
-    setPeople(setNewPeople);
-
-    console.log(setNewPeople);
-  };
-
-  const edit = (id: number) => {
-    setIsActive(false);
-    const randomNumber = Math.round(Math.random() * (20 - 50) + 50);
-    const updateAge = people.map((item) => {
-      if (item.id === id) {
-        item = { ...item, age: randomNumber };
-      }
-      return item;
-    });
-    setPeople(updateAge);
-  };
- */
   return (
     <div>
-      <ul>
-        {people.map((item) => {
-          console.log("item:", item.name);
-          return (
-            <li key={item.name}>
-              Name : {item.name}, Username : {item.username}, Email:{item.email}
-              <ul>
-                <li> {item.address.street}</li>
-                <li> {item.address.city}</li>
-              </ul>
-            </li>
-          );
-        })}
-      </ul>
+      <button onClick={toggle}>Toggle</button>
+      {isVisible ? (
+        <ul>
+          {todoList.map((item) => {
+            return (
+              <li key={item.id}>
+                Todo : {item.title}, userId : {item.userId}, completed:
+                {item.completed ? "Yes" : "No"}
+                <button onClick={() => CheckComplete(item.completed, item.id)}>
+                  {item.completed ? "Not completed" : "Completed"}
+                </button>
+                <button>Remove</button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        "List unavailable"
+      )}
     </div>
   );
 };
