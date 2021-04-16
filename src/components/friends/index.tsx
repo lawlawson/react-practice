@@ -7,6 +7,7 @@ interface ITodo {
   completed: boolean;
 }
 
+
 const Friends: React.FC = () => {
   const [todoList, setTodoList] = useState<ITodo[]>([]);
   const [isVisible, setIsVisible] = useState<boolean>(true);
@@ -15,14 +16,27 @@ const Friends: React.FC = () => {
     setIsVisible(!isVisible);
   };
 
-  const CheckComplete = (props: boolean, id: number): void => {
+  const Add = () => {
+
+    const id = todoList.length + 1 ;
+    const addObject = {userId:10, id, title:'Title3', completed:true}
+    setTodoList([...todoList,addObject]);
+
+  }
+
+  const RemoveID = (id:number) => {
     setTodoList(
-      todoList.map((item) => {
-        if (item.id === id) {
-          item = { ...item, completed: !props };
-        }
-        return item;
-      })
+      todoList.filter((item) => item.id !== id)
+    );
+  }
+
+  const CheckComplete = (id: number): void => {
+    setTodoList(
+      todoList.map((item) =>
+        (item.id === id) ?
+          item = { ...item, completed: !item.completed }
+        : item
+      )
     );
   };
 
@@ -44,6 +58,7 @@ const Friends: React.FC = () => {
   return (
     <div>
       <button onClick={toggle}>Toggle</button>
+      <button onClick={() => Add()}>Add</button>
       {isVisible ? (
         <ul>
           {todoList.map((item) => {
@@ -51,10 +66,10 @@ const Friends: React.FC = () => {
               <li key={item.id}>
                 Todo : {item.title}, userId : {item.userId}, completed:
                 {item.completed ? "Yes" : "No"}
-                <button onClick={() => CheckComplete(item.completed, item.id)}>
+                <button onClick={() => CheckComplete(item.id)}>
                   {item.completed ? "Not completed" : "Completed"}
                 </button>
-                <button>Remove</button>
+                <button onClick={() => RemoveID(item.id)}>Remove</button>
               </li>
             );
           })}
