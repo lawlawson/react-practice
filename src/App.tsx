@@ -1,10 +1,10 @@
 import React from "react";
-import Friends from "./components/friends";
+import Posts from "./components/Posts";
 
 function App() {
   return (
     <div className="App">
-      <Friends />
+      <Posts />
     </div>
   );
 }
