@@ -1,10 +1,10 @@
 import React from "react";
-import Posts from "./components/Posts";
+import People from "./components/People";
 
 function App() {
   return (
     <div className="App">
-      <Posts />
+      <People />
     </div>
   );
 }
