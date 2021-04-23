@@ -9,8 +9,11 @@ interface people {
 
 const People: React.FC = () => {
   const [peopleList, setPeopleList] = useState<people[]>([]);
+  const [message, setMessage] = useState<string>('');
+  const [status, setStatus] = useState('');
 
   const Add = () => {
+    setMessage('Adding...');
     const id = peopleList.length + 1;
     const addObject = {
       id,
@@ -18,7 +21,7 @@ const People: React.FC = () => {
       Location: "london",
       HasJob: true,
     };
-
+      setStatus('success');
     fetch("https://retoolapi.dev/E1RJhV/data/", {
       method: "POST",
       body: JSON.stringify(addObject),
@@ -26,31 +29,42 @@ const People: React.FC = () => {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then(function (response) {
+      .then((response) => {
         return response.json();
       })
-      .then(function () {
+      .then(()=> {
         setPeopleList([...peopleList, addObject]);
       })
       .catch(() => {
-        ("");
+        setMessage("Something went wrong!!!");
+        setStatus('');
       })
-      .finally(() => {});
-  };
-
-  const RemoveID = (id: number) => {
-    fetch(`https://retoolapi.dev/E1RJhV/data/${id}`, {
-      method: "DELETE",
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        setPeopleList(peopleList.filter((item) => item.id !== id));
+      .finally(() => {
+        setMessage('');
       });
   };
 
+  const RemoveID = (id: number) => {
+    setMessage('Deleting...');
+    console.log(setMessage);
+    setStatus('success');
+    fetch(`https://retoolapi.dev/E1RJhV/data/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setPeopleList(peopleList.filter((item) => item.id !== id));
+      }).catch(() => {
+        setStatus('');
+    }).finally(() => {
+      setMessage('');
+    });
+  };
+
   const Edit = (id: number): void => {
+    setMessage('Editing...')
     const editObject = {
       id,
       Name: "manpreet",
@@ -68,12 +82,16 @@ const People: React.FC = () => {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then(function (response) {
+      .then((response) => {
         return response.json();
       })
-      .then(function (data) {
+      .then((data) => {
         setPeopleList(tempEdit);
-      });
+      }).catch(() => {
+
+    }).finally(() => {
+      setMessage('');
+    });
   };
 
   useEffect(() => {
@@ -83,20 +101,21 @@ const People: React.FC = () => {
         Accept: "application/json",
       },
     })
-      .then(function (response) {
+      .then((response) => {
         return response.json();
       })
-      .then(function (data) {
+      .then((data) => {
         setPeopleList(data);
       });
   }, []);
 
   return (
-    <div>
+    <div className='container'>
       <ul>
         <button className="btn btn-success btn-sm mx-2" onClick={() => Add()}>
           Add
         </button>
+        {message  && <div className={`alert alert-${status}`} role="alert">{message}</div>}
         {peopleList.map((item: people) => {
           return (
             <li key={item.id}>
