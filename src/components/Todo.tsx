@@ -8,33 +8,27 @@ interface todo {
 interface todosProps {
   todos: todo[]
   author: author
-  // numberOfBooks: number
+  date: string
 }
 
 interface author {
   name: string
   numberOfBooks: number
 }
-// const Todo: React.FC<todos> = ({todos}) => {
-//   return <ul>
-//     {todos.map((todo) => (
-//       <li>{todo.name}</li>
-//     ))}
-//     </ul>;
-// }
 
-const TodoComponent: React.FC<todosProps> = (props) => {
-  console.log(props);
-
+const Todo: React.FC<todosProps> = ({todos, author, date}) => {
   return (
-  <div>
     <ul>
-      {props.todos.map((todo) => (<li>{todo.name}</li>))}
+      {todos.map((todo) => (
+        <>
+          <li>{todo.name}</li>
+          <li>{author.name}</li>
+          <li>{author.numberOfBooks}</li>
+          <li>{date}</li>
+        </>
+      ))}
     </ul>
-      <p>{props.author.numberOfBooks}</p>
-      <p>{props.author.name}</p>
-  </div>
   );
 }
 
-export default TodoComponent;
+export default Todo;
