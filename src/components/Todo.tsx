@@ -1,19 +1,19 @@
 import React from 'react';
 
 interface todo {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 
 interface todosProps {
-  todos: todo[]
-  author: author
-  date: string
+  todos: todo[];
+  author: author;
+  date: string;
 }
 
 interface author {
-  name: string
-  numberOfBooks: number
+  name: string;
+  numberOfBooks: number;
 }
 
 const Todo: React.FC<todosProps> = ({todos, author, date}) => {
@@ -29,6 +29,6 @@ const Todo: React.FC<todosProps> = ({todos, author, date}) => {
       ))}
     </ul>
   );
-}
+};
 
 export default Todo;
